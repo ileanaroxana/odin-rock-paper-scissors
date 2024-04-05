@@ -3,34 +3,46 @@ const paper = document.querySelector("#paper");
 const scissors = document.querySelector("#scissors");
 const results = document.querySelector("div");
 
-rock.addEventListener("click", () => {
+let playerScore = 0;
+let computerScore = 0;
+
+rock.addEventListener("click", (e) => {
     const computerSelection = getComputerSelection();
-    if (computerSelection === "rock")
-        results.textContent = "It's a draw!";
+    if (computerSelection === "rock") 
+        draw();
     else if (computerSelection === "paper")
-        results.textContent = "You Lose! Paper beats Rock";
+        computerWin(computerSelection, e.target.id);
     else if (computerSelection === "scissors")
-        results.textContent = "You Win! Rock beats Scissors";
+        playerWin(computerSelection, e.target.id);
+
+    if (playerScore == 5 || computerScore == 5)
+        gameOver();
 });
 
-paper.addEventListener("click", () => {
+paper.addEventListener("click", (e) => {
     const computerSelection = getComputerSelection();
     if (computerSelection === "paper")
-        results.textContent = "It's a draw!";
+        draw();
     else if (computerSelection === "scissors")
-        results.textContent = "You Lose! Scissors beats Paper";
+        computerWin(computerSelection, e.target.id);
     else if (computerSelection === "rock")
-        results.textContent = "You Win! Paper beats Rock";
+        playerWin(computerSelection, e.target.id);
+
+    if (playerScore == 5 || computerScore == 5)
+        gameOver();
 });
 
-scissors.addEventListener("click", () => {
+scissors.addEventListener("click", (e) => {
     const computerSelection = getComputerSelection();
     if (computerSelection === "scissors")
-        results.textContent = "It's a draw!";
+        draw();
     else if (computerSelection === "paper")
-        results.textContent = "You Win! Scissors beats Paper";
+        playerWin(computerSelection, e.target.id);
     else if (computerSelection === "rock")
-        results.textContent = "You Lose! Rock beats Scissors";
+        computerWin(computerSelection, e.target.id);
+
+    if (playerScore == 5 || computerScore == 5)
+        gameOver();
 });
 
 function getComputerSelection() {
@@ -44,4 +56,60 @@ function getComputerSelection() {
         case 2:
             return "scissors";
     }
+}
+
+function draw() {
+    playerScore++;
+    computerScore++;
+
+    results.textContent =  
+        `It's a draw!
+        You: ${playerScore}
+        Computer: ${computerScore}`;
+
+}
+
+function playerWin(computerSelection, playerSelection) {
+    playerScore++;
+
+    computerSelection = capitalizeFirstLetter(computerSelection);
+    playerSelection = capitalizeFirstLetter(playerSelection);
+
+    results.textContent = 
+        `You Win! ${playerSelection} beats ${computerSelection}.
+        You: ${playerScore}
+        Computer: ${computerScore}`;
+    
+}
+
+function computerWin(computerSelection, playerSelection) {
+    computerScore++;
+
+    computerSelection = capitalizeFirstLetter(computerSelection);
+    playerSelection = capitalizeFirstLetter(playerSelection);
+
+    results.textContent = 
+        `You Lose! ${computerSelection} beats ${playerSelection}.
+        You: ${playerScore}
+        Computer: ${computerScore}`;
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase().concat(string.slice(1));
+}
+
+function gameOver() {
+    if (playerScore == 5)
+        results.textContent = 
+            `CONGRATULATIONS! You Won the Game!
+            Your score: ${playerScore}
+            Computer score: ${computerScore}`;
+    else if (computerScore == 5) 
+        results.textContent = 
+            `THIS TIME the Computer Won the Game!
+            Your score: ${playerScore}
+            Computer score: ${computerScore}`;
+    
+    playerScore = 0;
+    computerScore = 0;
 }
